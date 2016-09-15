@@ -1,0 +1,36 @@
+{
+  "name": "appuri-loader-transform",
+  "version": "0.1.0",
+  "description": "Client for the Appuri Event API",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appuri/node-loader-transform.git"
+  },
+  "keywords": [
+    "appuri"
+  ],
+  "author": "Appuri, Inc <info@appuri.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/appuri/node-loader-transform/issues"
+  },
+  "engines": {
+    "node": ">= 4"
+  },
+  "homepage": "https://github.com/appuri/node-loader-transform#readme",
+  "dependencies": {
+    "appuri-event-validator": "^0.2.1",
+    "through2": "^2.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "mocha": "^2.5.3",
+    "stream-spigot": "^3.0.5",
+    "stream-to-array": "^2.3.0"
+  }
+}
