@@ -1,11 +1,20 @@
 const through2 = require('through2'),
-      validator = require('appuri-event-validator')
+  validator = require('appuri-event-validator')
 
-module.exports = function(loaderTransform, validate) {
-  let recordCount = 0, invalidEvents = 0
+function asArray(data) {
+  if (Array.isArray(data)) {
+    return data
+  } else if (data) {
+    return [data]
+  }
+  return []
+}
+
+module.exports = function (loaderTransform, validateLoaderEvents) {
+  let recordCount = 0, invalidEvents = 0 
   const transformFn = process.env.TRANSFORM_FN && new Function(`return (${process.env.TRANSFORM_FN}).apply(this, arguments)`)
 
-  return through2.obj(function(chunk, enc, cb) {
+  return through2.obj(function (chunk, enc, cb) {
     if (chunk.error) {
       return cb()
     }
@@ -14,31 +23,27 @@ module.exports = function(loaderTransform, validate) {
       console.log('Processed %d records', recordCount)
     }
 
-    var defaultEvent = loaderTransform(chunk)
+    var loaderEventValidator = (le) => validateLoaderEvents !== false ? validator.isValid(le) : true
 
-    if (transformFn) {
-      let transformed = transformFn(chunk, defaultEvent)
-
-      // transform functions may return 0, 1, or many events
-      if (transformed) {
-        if (Array.isArray(transformed)) {
-          var validEvents = transformed.filter(validator.isValid)
-          validEvents.forEach(e => this.push(e))
-          invalidEvents += (transformed.length - validEvents.length)
-        } else if (validator.isValid(transformed)) {
-          this.push(transformed)
+    asArray(loaderTransform(chunk)).forEach(le => {
+      if (transformFn) {
+        let transformed = asArray(transformFn(chunk, le))
+        let validEvents = transformed.filter(validator.isValid)
+        validEvents.forEach(e => this.push(e))
+        invalidEvents += (transformed.length - validEvents.length)
+      } else {
+        if(loaderEventValidator(le)) {
+          this.push(le)
         } else {
           invalidEvents++
         }
       }
-    } else if (defaultEvent && (validate === false || validator.isValid(defaultEvent))) {
-      this.push(defaultEvent)
-    }
+    })
 
     cb()
   },
-  function(cb) {
-    console.log('\nProcessed %d records, skipping %d invalid events', recordCount, invalidEvents)
-    cb()
-  })
+    function (cb) {
+      console.log('\nProcessed %d records, skipping %d invalid events', recordCount, invalidEvents)
+      cb()
+    })
 }
