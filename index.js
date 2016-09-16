@@ -11,13 +11,11 @@ function asArray(data) {
 }
 
 module.exports = function (loaderTransform, validateLoaderEvents) {
-  let recordCount = 0, invalidEvents = 0 
+  let recordCount = 0, invalidEvents = 0
   const transformFn = process.env.TRANSFORM_FN && new Function(`return (${process.env.TRANSFORM_FN}).apply(this, arguments)`)
 
   return through2.obj(function (chunk, enc, cb) {
-    if (chunk.error) {
-      return cb()
-    }
+    if (chunk == null) return
 
     if ((recordCount++) % 10000 === 0) {
       console.log('Processed %d records', recordCount)
