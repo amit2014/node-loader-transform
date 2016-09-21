@@ -10,9 +10,9 @@ function asArray(data) {
   return []
 }
 
-module.exports = function (loaderTransform, validateLoaderEvents) {
+module.exports = function (loaderTransform, userTransform, validateLoaderEvents) {
   let recordCount = 0, invalidEvents = 0
-  const transformFn = process.env.TRANSFORM_FN && new Function(`return (${process.env.TRANSFORM_FN}).apply(this, arguments)`)
+  const transformFn = userTransform && new Function(`return (${userTransform}).apply(this, arguments)`)
 
   return through2.obj(function (chunk, enc, cb) {
     if (chunk == null) return
