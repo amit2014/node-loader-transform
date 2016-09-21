@@ -11,10 +11,6 @@ Array.prototype.transform = function() {
 }
 
 describe('transform stream', function() {
-  beforeEach(function() {
-    delete process.env.TRANSFORM_FN
-  })
-
   it('should work without a transform function, validating events when requested', function() {
     return ['bob:login', 'jane:!!', 'jill:login']
     .transform(l => {
@@ -38,7 +34,7 @@ describe('transform stream', function() {
 
   it('should work without a transform function, not validating events when requested', function() {
     return ['a', 'b', 'c']
-      .transform(x => 'You said ' + x, false)
+      .transform(x => 'You said ' + x, null, false)
       .should.eventually.deep.equal([
         'You said a',
         'You said b',
@@ -49,11 +45,6 @@ describe('transform stream', function() {
 
   it('should work a transform function, passing it the original record and the default event transform', function() {
     global.calls = []
-    process.env.TRANSFORM_FN = function(r, e) {
-      global.calls.push(Array.prototype.slice.call(arguments))
-      e.user_id = 'name:' + e.user_id
-      return e
-    }.toString()
 
     return ['bob:login', 'jane:!!', 'jill:login']
     .transform(l => {
@@ -63,7 +54,11 @@ describe('transform stream', function() {
         evname,
         user_id
       }
-    })
+    }, function(r, e) {
+      global.calls.push(Array.prototype.slice.call(arguments))
+      e.user_id = 'name:' + e.user_id
+      return e
+    }.toString())
     .should.eventually.deep.equal([{
       entype: 'user',
       evname: 'login',
@@ -90,7 +85,7 @@ describe('transform stream', function() {
     }
 
     return ['a', 'b', 'c']
-      .transform(x => 'You said ' + x, false)
+      .transform(x => 'You said ' + x, null, false)
       .then(function() {
         console.log = origLog
         lines.should.deep.equal([
