@@ -76,6 +76,38 @@ describe('transform stream', function() {
     })
   })
 
+  it('should expose node globals and moment to the transform function', function() {
+    return ['bob:login', 'jane:!!', 'jill:login']
+    .transform(l => {
+      var [user_id, evname] = l.split(':')
+      return {
+        entype: 'user',
+        evname,
+        user_id
+      }
+    }, function(r, e) {
+      require('chai')
+      e.user_id = 'name:' + e.user_id
+      e.body = { foo: __dirname }
+      return e
+    }.toString())
+    .should.eventually.deep.equal([{
+      entype: 'user',
+      evname: 'login',
+      user_id: 'name:bob',
+      body: {
+        foo: __dirname.replace(/\/test$/, '')
+      }
+    }, {
+      entype: 'user',
+      evname: 'login',
+      user_id: 'name:jill',
+      body: {
+        foo: __dirname.replace(/\/test$/, '')
+      }
+    }])
+  })
+
   it('should log how many records it processed', function() {
     var origLog = console.log, lines = []
     console.log = function(l, x) {

@@ -12,7 +12,11 @@ function asArray(data) {
 
 module.exports = function (loaderTransform, userTransform, validateLoaderEvents) {
   let recordCount = 0, invalidEvents = 0
-  const transformFn = userTransform && new Function(`return (${userTransform}).apply(this, arguments)`)
+  const transformFn = userTransform && new Function(
+      'exports', 'require', 'module',
+      '__filename', '__dirname',
+      `return ${userTransform}`
+    )(exports, require, module, __filename, __dirname)
 
   return through2.obj(function (chunk, enc, cb) {
     if (chunk == null) return
