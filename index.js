@@ -1,6 +1,5 @@
 const through2 = require('through2'),
-  validator = require('appuri-event-validator'),
-  moment = require('moment')
+  validator = require('appuri-event-validator')
 
 function asArray(data) {
   if (Array.isArray(data)) {
@@ -15,9 +14,9 @@ module.exports = function (loaderTransform, userTransform, validateLoaderEvents)
   let recordCount = 0, invalidEvents = 0
   const transformFn = userTransform && new Function(
       'exports', 'require', 'module',
-      '__filename', '__dirname', 'moment',
+      '__filename', '__dirname'
       `return ${userTransform}`
-    )(exports, require, module, __filename, __dirname, moment)
+    )(exports, require, module, __filename, __dirname)
 
   return through2.obj(function (chunk, enc, cb) {
     if (chunk == null) return

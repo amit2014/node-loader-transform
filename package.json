@@ -24,8 +24,7 @@
   "homepage": "https://github.com/appuri/node-loader-transform#readme",
   "dependencies": {
     "appuri-event-validator": "^0.2.1",
-    "through2": "^2.0.1",
-    "moment": "*"
+    "through2": "^2.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
