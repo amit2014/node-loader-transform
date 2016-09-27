@@ -14,7 +14,7 @@ module.exports = function (loaderTransform, userTransform, validateLoaderEvents)
   let recordCount = 0, invalidEvents = 0
   const transformFn = userTransform && new Function(
       'exports', 'require', 'module',
-      '__filename', '__dirname'
+      '__filename', '__dirname',
       `return ${userTransform}`
     )(exports, require, module, __filename, __dirname)
 

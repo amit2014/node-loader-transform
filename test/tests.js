@@ -88,19 +88,23 @@ describe('transform stream', function() {
     }, function(r, e) {
       require('chai')
       e.user_id = 'name:' + e.user_id
-      e.ts = moment('2016-09-27').utc().toISOString()
+      e.body = { foo: __dirname }
       return e
     }.toString())
     .should.eventually.deep.equal([{
       entype: 'user',
       evname: 'login',
       user_id: 'name:bob',
-      ts: '2016-09-27T07:00:00.000Z'
+      body: {
+        foo: __dirname.replace(/\/test$/, '')
+      }
     }, {
       entype: 'user',
       evname: 'login',
       user_id: 'name:jill',
-      ts: '2016-09-27T07:00:00.000Z'
+      body: {
+        foo: __dirname.replace(/\/test$/, '')
+      }
     }])
   })
 
