@@ -21,7 +21,7 @@ module.exports = function (loaderTransform, userTransform, validateLoaderEvents)
   return through2.obj(function (chunk, enc, cb) {
     if (chunk == null) return
 
-    if ((recordCount++) % 10000 === 0) {
+    if ((++recordCount) % 10000 === 0) {
       console.log('Processed %d records', recordCount)
     }
 
