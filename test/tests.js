@@ -121,7 +121,6 @@ describe('transform stream', function() {
       .then(function() {
         console.log = origLog
         lines.should.deep.equal([
-          'Processed 1 records',
           '\nProcessed 3 records, skipping 0 invalid events'
         ])
       })
