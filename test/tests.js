@@ -14,7 +14,7 @@ describe('transform stream', function() {
   it('should work without a transform function, validating events when requested', function() {
     return ['bob:login', 'jane:!!', 'jill:login']
     .transform(l => {
-      var [user_id, evname] = l.split(':')
+      var parts = l.split(':'), user_id = parts[0], evname = parts[1]
       return {
         entype: 'user',
         evname,
@@ -48,7 +48,7 @@ describe('transform stream', function() {
 
     return ['bob:login', 'jane:!!', 'jill:login']
     .transform(l => {
-      var [user_id, evname] = l.split(':')
+      var parts = l.split(':'), user_id = parts[0], evname = parts[1]
       return {
         entype: 'user',
         evname,
@@ -79,7 +79,7 @@ describe('transform stream', function() {
   it('should expose node globals and moment to the transform function', function() {
     return ['bob:login', 'jane:!!', 'jill:login']
     .transform(l => {
-      var [user_id, evname] = l.split(':')
+      var parts = l.split(':'), user_id = parts[0], evname = parts[1]
       return {
         entype: 'user',
         evname,
