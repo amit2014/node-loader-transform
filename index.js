@@ -11,7 +11,7 @@ function asArray(data) {
 }
 
 module.exports = function (loaderTransform, userTransform, validateLoaderEvents) {
-  let recordCount = 0, invalidEvents = 0
+  var recordCount = 0, invalidEvents = 0
   const transformFn = userTransform && new Function(
       'exports', 'require', 'module',
       '__filename', '__dirname',
@@ -29,8 +29,8 @@ module.exports = function (loaderTransform, userTransform, validateLoaderEvents)
 
     asArray(loaderTransform(chunk)).forEach(le => {
       if (transformFn) {
-        let transformed = asArray(transformFn(chunk, le))
-        let validEvents = transformed.filter(validator.isValid)
+        var transformed = asArray(transformFn(chunk, le))
+        var validEvents = transformed.filter(validator.isValid)
         validEvents.forEach(e => this.push(e))
         invalidEvents += (transformed.length - validEvents.length)
       } else {
