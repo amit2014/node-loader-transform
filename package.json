@@ -1,6 +1,6 @@
 {
   "name": "appuri-loader-transform",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Client for the Appuri Event API",
   "main": "index.js",
   "scripts": {
